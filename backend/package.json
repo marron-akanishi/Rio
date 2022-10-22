@@ -1,0 +1,32 @@
+{
+  "name": "rio-backend",
+  "version": "1.0.0",
+  "description": "Rio API Server",
+  "main": "dist/index.js",
+   "scripts": {
+     "dev": "ts-node-dev --respawn src/index.ts",
+     "clean": "rimraf dist",
+     "tsc": "tsc",
+     "build": "npm-run-all clean tsc",
+     "start": "node ."
+   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.io/marron-akanishi/Rio"
+  },
+  "author": "Marron Akanishi",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.14",
+    "@types/node": "^18.11.3",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^3.0.2",
+    "ts-node": "^10.9.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^4.8.4"
+  }
+}

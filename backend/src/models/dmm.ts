@@ -48,3 +48,20 @@ export interface DmmMakerList {
     }[];
   };
 }
+
+/**
+ * DMM作者検索API　レスポンス
+ * 
+ * 使う分だけ型定義
+ */
+ export interface DmmAuthorList {
+  result: {
+    status: string;
+    result_count: number;
+    total_count: string;
+    author: {
+      author_id: string;
+      name: string;
+    }[];
+  };
+}

@@ -112,13 +112,12 @@ paths:
       summary: DMMメーカー検索API
       description: DMMメーカー検索APIでFANZAに登録されているエロゲメーカーの情報を取得
       parameters:
-        - name: initial
+        - name: rudy
           in: query
-          description: 頭文字
+          description: ふりがな（先頭一致）
           required: true
           schema:
             type: string
-            maxLength: 1
       responses:
         '200':
           description: OK
@@ -133,13 +132,12 @@ paths:
       summary: DMM作者検索API
       description: DMM作者検索APIでFANZAに登録されている原画家の情報を取得
       parameters:
-        - name: initial
+        - name: ruby
           in: query
-          description: 頭文字
+          description: ふりがな（先頭一致）
           required: true
           schema:
             type: string
-            maxLength: 1
       responses:
         '200':
           description: OK

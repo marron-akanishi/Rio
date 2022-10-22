@@ -1,9 +1,10 @@
 import express from 'express';
-import type { DmmItemList, DmmMakerList } from '../../models/dmm';
+import type { DmmItemList, DmmMakerList, DmmAuthorList } from '../../models/dmm';
 
 const router = express.Router();
 const DMM_PRODUCTS_URL = 'https://api.dmm.com/affiliate/v3/ItemList';
 const DMM_MAKERS_URL = 'https://api.dmm.com/affiliate/v3/MakerSearch';
+const DMM_AUTHORS_URL = 'https://api.dmm.com/affiliate/v3/AuthorSearch';
 
 interface GetProductsRequest extends express.Request {
   query: {
@@ -14,7 +15,7 @@ interface GetProductsRequest extends express.Request {
 
 interface GetListRequest extends express.Request {
   query: {
-    initial: string | undefined
+    ruby: string | undefined
   }
 }
 
@@ -68,14 +69,14 @@ router.get('/products', async (req: GetProductsRequest, res: express.Response) =
  */
 router.get('/makers', async (req: GetListRequest, res: express.Response) => {
   try {
-    if (!req.query.initial || req.query.initial.length !== 1) throw new Error("パラメータの指定が間違っています");
+    if (!req.query.ruby) throw new Error("パラメータの指定がありません");
     if (!process.env.DMM_API_KEY || !process.env.DMM_AFFILIATE_ID) throw new Error("DMM APIの設定がされていません");
 
     const params = {
       api_id: process.env.DMM_API_KEY,
       affiliate_id: process.env.DMM_AFFILIATE_ID,
       floor_id: '80',
-      initial: req.query.initial,
+      initial: req.query.ruby,
       hits: '500',
       output: 'json',
     };
@@ -88,6 +89,41 @@ router.get('/makers', async (req: GetListRequest, res: express.Response) => {
       total: Number(resp.result.total_count),
       items: resp.result.maker.map((item) => ({
         id: Number(item.maker_id),
+        name: item.name,
+      })),
+    };
+
+    res.status(200).json(data);
+  } catch (e: any) {
+    res.status(400).json({ detail: e.message });
+  }
+});
+
+/**
+ * DMM作者検索API
+ */
+ router.get('/authors', async (req: GetListRequest, res: express.Response) => {
+  try {
+    if (!req.query.ruby) throw new Error("パラメータの指定がありません");
+    if (!process.env.DMM_API_KEY || !process.env.DMM_AFFILIATE_ID) throw new Error("DMM APIの設定がされていません");
+
+    const params = {
+      api_id: process.env.DMM_API_KEY,
+      affiliate_id: process.env.DMM_AFFILIATE_ID,
+      floor_id: '80',
+      initial: req.query.ruby,
+      hits: '500',
+      output: 'json',
+    };
+    const query = new URLSearchParams(params);
+
+    const resp = await (await fetch(`${DMM_AUTHORS_URL}?${query}`)).json() as DmmAuthorList;
+    if (resp.result.status !== "200") throw new Error("APIの呼び出しに失敗しました");
+
+    const data = {
+      total: Number(resp.result.total_count),
+      items: resp.result.author.map((item) => ({
+        id: Number(item.author_id),
         name: item.name,
       })),
     };

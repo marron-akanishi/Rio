@@ -5,6 +5,80 @@ info:
 servers:
   - url: https://localhost:3000/api
 paths:
+  /v1/internal/products:
+    get:
+      tags:
+        - 内部
+      summary: 一覧取得
+      description: 登録済みエロゲ一覧の取得
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalList'
+    post:
+      tags:
+        - 内部
+      summary: 追加
+      description: エロゲの新規追加
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InternalAdd'
+      responses:
+        '201':
+          description: Created
+  /v1/internal/products/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    put:
+      tags:
+        - 内部
+      summary: 更新
+      description: エロゲの更新
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InternalAdd'
+      responses:
+        '200':
+          description: OK
+    delete:
+      tags:
+        - 内部
+      summary: 削除
+      description: エロゲの削除
+      responses:
+        '204':
+          description: No Content
+  /v1/internal/products/{id}/status:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    put:
+      tags:
+        - 内部
+      summary: 攻略状態更新
+      description: 攻略ルートの攻略状態を更新
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InternalStatusUpdate'
+      responses:
+        '200':
+          description: OK
   /v1/dmm/products:
     get:
       tags:
@@ -31,6 +105,48 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DMMItem'
+  /v1/dmm/makers:
+    get:
+      tags:
+        - DMM
+      summary: DMMメーカー検索API
+      description: DMMメーカー検索APIでFANZAに登録されているエロゲメーカーの情報を取得
+      parameters:
+        - name: initial
+          in: query
+          description: 頭文字
+          required: true
+          schema:
+            type: string
+            maxLength: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DMMMaker'
+  /v1/dmm/authors:
+    get:
+      tags:
+        - DMM
+      summary: DMM作者検索API
+      description: DMM作者検索APIでFANZAに登録されている原画家の情報を取得
+      parameters:
+        - name: initial
+          in: query
+          description: 頭文字
+          required: true
+          schema:
+            type: string
+            maxLength: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DMMAuthor'
   /v1/scape/products:
     get:
       tags:
@@ -99,6 +215,163 @@ paths:
                 $ref: '#/components/schemas/SeiyaRoute'
 components:
   schemas:
+    InternalList:
+      type: object
+      properties:
+        total:
+          type: integer
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              _id:
+                type: string
+              content_id:
+                type: string
+              title:
+                type: string
+              dmm_url:
+                type: string
+                format: url
+              image_url:
+                type: string
+                format: url
+              thumbnail_url:
+                type: string
+                format: url
+              date:
+                type: string
+              maker:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+              author:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+              cheat_url:
+                type: string
+                format: url
+              routes:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    status:
+                      type: integer
+                      description: |-
+                        0: 未攻略  
+                        1: 攻略中  
+                        2: 攻略済み
+                      enum:
+                        - 0
+                        - 1
+                        - 2
+              engine:
+                type: string
+                description: スクリプトエンジン
+              note:
+                type: string
+                description: 備考
+              exe_path:
+                type: string
+                description: 実行ファイルの場所
+    InternalAdd:
+      type: object
+      required:
+        - title
+      properties:
+        content_id:
+          type: string
+        title:
+          type: string
+        dmm_url:
+          type: string
+          format: url
+        image_url:
+          type: string
+          format: url
+        thumbnail_url:
+          type: string
+          format: url
+        date:
+          type: string
+        maker:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+        author:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+        cheat_url:
+          type: string
+          format: url
+        routes:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              status:
+                type: integer
+                description: |-
+                  0: 未攻略  
+                  1: 攻略中  
+                  2: 攻略済み
+                enum:
+                  - 0
+                  - 1
+                  - 2
+        engine:
+          type: string
+          description: スクリプトエンジン
+        note:
+          type: string
+          description: 備考
+        exe_path:
+          type: string
+          description: 実行ファイルの場所
+    InternalStatusUpdate:
+      type: object
+      properties:
+        routes:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              status:
+                type: integer
+                enum:
+                  - 0
+                  - 1
+                  - 2
     DMMItem:
       type: object
       properties:
@@ -145,6 +418,34 @@ components:
                       type: string
                     ruby:
                       type: string
+    DMMMaker:
+      type: object
+      properties:
+        total:
+          type: integer
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+    DMMAuthor:
+      type: object
+      properties:
+        total:
+          type: integer
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
     ScapeItem:
       type: object
       properties:

@@ -1,5 +1,8 @@
 import { JSDOM } from 'jsdom';
 
+/**
+ * HTMLの文字コードをメタ情報から判定する
+ */
 export const detectCharset = (buffer: ArrayBuffer): 'sjis' | 'eucjp' | 'utf8' => {
   const html = Buffer.from(buffer).toString('utf-8');
   const dom = new JSDOM(html);

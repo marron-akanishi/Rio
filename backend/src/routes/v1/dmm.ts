@@ -102,7 +102,7 @@ router.get('/makers', async (req: GetListRequest, res: express.Response) => {
 /**
  * DMM作者検索API
  */
- router.get('/authors', async (req: GetListRequest, res: express.Response) => {
+router.get('/authors', async (req: GetListRequest, res: express.Response) => {
   try {
     if (!req.query.ruby) throw new Error("パラメータの指定がありません");
     if (!process.env.DMM_API_KEY || !process.env.DMM_AFFILIATE_ID) throw new Error("DMM APIの設定がされていません");

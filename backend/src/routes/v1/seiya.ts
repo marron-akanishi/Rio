@@ -50,7 +50,7 @@ router.get('/products', async (req: GetProductsRequest, res: express.Response) =
 /**
  * 誠也の部屋攻略ルート一覧API
  */
- router.get('/routes', async (req: GetRoutesRequest, res: express.Response) => {
+router.get('/routes', async (req: GetRoutesRequest, res: express.Response) => {
   try {
     if (!req.query.url) throw new Error("パラメータの指定がありません");
 

@@ -31,3 +31,20 @@ export interface DmmItemList {
     }[];
   };
 }
+
+/**
+ * DMMメーカー検索API　レスポンス
+ * 
+ * 使う分だけ型定義
+ */
+export interface DmmMakerList {
+  result: {
+    status: string;
+    result_count: number;
+    total_count: string;
+    maker: {
+      maker_id: string;
+      name: string;
+    }[];
+  };
+}

@@ -81,8 +81,8 @@ paths:
     get:
       tags:
         - 誠也の部屋
-      summary: 誠也の部屋攻略キャラ一覧API
-      description: 誠也の部屋の攻略ページURLから攻略キャラの一覧を取得
+      summary: 誠也の部屋攻略ルート一覧API
+      description: 誠也の部屋の攻略ページURLから攻略ルートの一覧を取得
       parameters:
         - name: url
           in: query

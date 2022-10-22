@@ -143,6 +143,8 @@ components:
                       type: integer
                     name:
                       type: string
+                    ruby:
+                      type: string
     ScapeItem:
       type: object
       properties:

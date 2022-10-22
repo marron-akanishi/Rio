@@ -1,0 +1,182 @@
+openapi: '3.0.2'
+info:
+  title: Rio API
+  version: '1.0'
+servers:
+  - url: https://localhost:3000/api
+paths:
+  /v1/dmm/products:
+    get:
+      tags:
+        - DMM
+      summary: DMM商品情報取得API
+      description: DMM商品情報APIでFANZAにあるエロゲの情報を取得
+      parameters:
+        - name: cid
+          in: query
+          description: 商品ID
+          required: false
+          schema:
+            type: string
+        - name: keyword
+          in: query
+          description: キーワード
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DMMItem'
+  /v1/scape/products:
+    get:
+      tags:
+        - エロゲー批評空間
+      summary: エロゲー批評空間情報取得API（実装未定）
+      description: エロゲー批評空間からエロゲの情報を取得
+      parameters:
+        - name: id
+          in: query
+          description: ID
+          required: false
+          schema:
+            type: integer
+        - name: title
+          in: query
+          description: タイトル（部分検索）
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScapeItem'
+  /v1/seiya/products:
+    get:
+      tags:
+        - 誠也の部屋
+      summary: 誠也の部屋一覧取得API
+      description: 誠也の部屋から指定されたタイトルに一致するエロゲを取得
+      parameters:
+        - name: title
+          in: query
+          description: タイトル（部分一致）
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SeiyaItem'
+  /v1/seiya/routes:
+    get:
+      tags:
+        - 誠也の部屋
+      summary: 誠也の部屋攻略キャラ一覧API
+      description: 誠也の部屋の攻略ページURLから攻略キャラの一覧を取得
+      parameters:
+        - name: url
+          in: query
+          description: 誠也の部屋の攻略ページURL
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SeiyaRoute'
+components:
+  schemas:
+    DMMItem:
+      type: object
+      properties:
+        total:
+          type: integer
+        items:
+          type: array
+          description: 先頭100件のみ返却
+          items:
+            type: object
+            properties:
+              content_id:
+                type: string
+              title:
+                type: string
+              dmm_url:
+                type: string
+                format: url
+              image_url:
+                type: string
+                format: url
+              thumbnail_url:
+                type: string
+                format: url
+              date:
+                type: string
+              maker:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+              author:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+    ScapeItem:
+      type: object
+      properties:
+        total:
+          type: integer
+        items:
+          type: array
+          description: 先頭100件のみ返却
+          items:
+            type: object
+            properties:
+              id:
+                  type: string
+              title:
+                type: string
+    SeiyaItem:
+      type: object
+      properties:
+        total:
+          type: integer
+        items:
+          type: array
+          description: 先頭100件のみ返却
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+              url:
+                  type: string
+    SeiyaRoute:
+      type: object
+      properties:
+        routes:
+          type: array
+          items:
+            type: string
